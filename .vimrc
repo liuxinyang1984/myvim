@@ -131,18 +131,10 @@ call plug#begin('~/.vim/plugged')
 Plug 'rakr/vim-one'
 Plug 'morhetz/gruvbox'
 
-"coc.vim
-Plug 'neoclide/coc.nvim',{'branch':'release'}
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-"Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree'
 
-
-
-"MakeDown
-Plug 'iamcco/markdown-preview.vim'
-"Plug 'instant-markdown/vim-instant-markdown'        "测试新版MD预览
-Plug 'joker1007/vim-markdown-quote-syntax'
 
 "TabMode
 Plug 'dhruvasagar/vim-table-mode'
@@ -168,10 +160,8 @@ Plug 'Raimondi/delimitMate'
 "可视化缩进
 Plug 'Yggdroot/indentLine'
 
+"sudowrite
 Plug 'lambdalisue/suda.vim'         "忘记sudo vim 可以:sudowrite或者:sw
-
-"vim ranger
-Plug 'kevinhwang91/rnvimr'
 
 call plug#end()
 
@@ -206,112 +196,5 @@ noremap fl :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
 noremap fr :<C-U><C-R>=printf("Leaderf rg %s", "")<CR><CR>
 noremap fc :<C-U><C-R>=printf("Leaderf colorscheme %s", "")<CR><CR>
 
-"""""""""""""
-"COC配置
-"""""""""""""
 
-"插件安装 
-let g:coc_global_extensions = [
-            \'coc-highlight',
-            \'coc-vimlsp',
-            \'coc-json',
-            \'coc-html',
-            \'coc-css',
-            \'coc-phpls',
-            \'coc-emmet',
-            \'coc-git',
-            \'coc-tsserver',
-            \'coc-yank',
-            \'coc-vetur',
-            \'coc-python',
-            \'coc-snippets',
-            \'coc-go',
-            \'coc-clangd',
-            \ 'coc-explorer',
-            \]
-"COC用全局设置
-"set nobackup
-"set nowritebackup
-set updatetime=300
-set shortmess+=c
-
-"TAB自动补全
-inoremap <silent><expr> <TAB><TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-
-"手动自动补全
-"inoremap <silent><expr> <leader>, coc#refresh()
- 
-
-"回车后补全
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-"查找上一个或者下一个错误
-nmap <silent> <leader>j <Plug>(coc-diagnostic-prev)
-nmap <silent> <leader>k <Plug>(coc-diagnostic-next)
-
-""""""""""""
-"跳转到定义
-""""""""""""
-
-"查看定义
-nmap <silent> gd <Plug>(coc-definition)
-"
-nmap <silent> gy <Plug>(coc-type-definition)
-"
-nmap <silent> gi <Plug>(coc-implementation)
-"
-nmap <silent> gr <Plug>(coc-references)
-
-"显示文档
-nmap <silent> M :call <SID>show_documentation()<CR>
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
-
-"高亮相同文本
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-"重命名 
-nmap <leader>rn <Plug>(coc-rename)
-
-"格式化文本
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
-" ==================== rnvimr ====================
-let g:rnvimr_ex_enable = 1
-let g:rnvimr_pick_enable = 1
-let g:rnvimr_draw_border = 0
-" let g:rnvimr_bw_enable = 1
-highlight link RnvimrNormal CursorLine
-nnoremap <silent> R :RnvimrToggle<CR><C-\><C-n>:RnvimrResize 0<CR>
-let g:rnvimr_action = {
-            \ '<C-t>': 'NvimEdit tabedit',
-            \ '<C-x>': 'NvimEdit split',
-            \ '<C-v>': 'NvimEdit vsplit',
-            \ 'gw': 'JumpNvimCwd',
-            \ 'yw': 'EmitRangerCwd'
-            \ }
-let g:rnvimr_layout = { 'relative': 'editor',
-            \ 'width': &columns,
-            \ 'height': &lines,
-            \ 'col': 0,
-            \ 'row': 0,
-            \ 'style': 'minimal' }
-let g:rnvimr_presets = [{'width': 1.0, 'height': 1.0}]
 
