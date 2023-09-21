@@ -49,8 +49,40 @@ if (empty($TMUX))
   endif
 endif
 
-"测试剪切板
-vnoremap Y "+y
+"""""""""""""""""""""""""
+"       fcitx设置       "
+"""""""""""""""""""""""""
+let g:input_toggle = 1
+function! Fcitx2en()
+   let s:input_status = system("fcitx5-remote")
+   if s:input_status == 2
+      let g:input_toggle = 1
+      let l:a = system("fcitx5-remote -c")
+   endif
+endfunction
+
+function! Fcitx2zh()
+   let s:input_status = system("fcitx5-remote")
+   if s:input_status != 2
+      let l:a = system("fcitx5-remote -o")
+      let g:input_toggle = 0
+   endif
+endfunction
+
+set ttimeoutlen=150
+"退出插入模式
+autocmd InsertLeave * call Fcitx2en()
+"进入插入模式
+autocmd InsertEnter * call Fcitx2zh()
+
+
+"""""""""""""""""""""""""
+"      系统剪贴板       "
+"""""""""""""""""""""""""
+vmap <leader>y "*y
+nmap <leader>y "*y
+vmap <leader>p "*p
+nmap <leader>p "*p
 
 "输入状态移动光标
 imap	<c-h>	<left>
@@ -173,9 +205,41 @@ Plug 'lambdalisue/suda.vim'         "忘记sudo vim 可以:sudowrite或者:sw
 "vim ranger
 Plug 'kevinhwang91/rnvimr'
 
+"快速注释
+Plug 'scrooloose/nerdcommenter' 
+
 call plug#end()
 
 
+"""""""""""""""""""""""""
+"      快速注释         "
+"""""""""""""""""""""""""
+filetype plugin on
+" 默认情况下，在注释分隔符后添加空格
+let g:NERDSpaceDelims = 1
+
+" 对美化的多行注释使用压缩语法(貌似这个没什么卵用)
+let g:NERDCompactSexyComs = 1
+
+" 按行对齐注释分隔符左对齐，而不是按代码缩进
+"let g:NERDDefaultAlign = 'left'
+
+" 默认情况下，将语言设置为使用其备用分隔符（不是很明白所以忽略）
+let g:NERDAltDelims_java = 1
+
+" 添加您自己的自定义格式或覆盖默认格式（你懂的）
+let g:NERDCustomDelimiters = { 'php': { 'left': '/*','right': '*/' },'html': { 'left': '<!--','right': '-->' },'py': { 'left': '#' },'sh': { 'left': '#' } }
+
+" 允许注释和反转空行（在注释区域时很有用） （没亲测）
+let g:NERDCommentEmptyLines = 1
+
+" 取消注释时启用尾随空白的修剪
+let g:NERDTrimTrailingWhitespace = 1
+
+" 启用nerdcommenttoggle检查是否对所有选定行进行了注释
+let g:NERDToggleCheckAllLines = 1
+
+nmap <C-/> <plug>NERDCommenterToggle
 """""""""""""
 " Leaderf 配置
 """""""""""""
