@@ -91,8 +91,10 @@ imap	<c-k>	<up>
 imap	<c-l>	<right>
 
 "切换Tab标签
-nmap    tn   :tabe<CR>
+nmap    tn  :tabe<CR>
 nmap	th	:tabp<CR>
+nmap    tk  :-tabmove<CR>
+nmap    tj  :+tabmove<CR>
 nmap	tl	:tabn<CR>
 
 "Shift跨行移动
@@ -124,8 +126,8 @@ map wl      <c-w>l
 
 map sl      :set splitright<CR>:vsplit<CR>
 map sh      :set nosplitright<CR>:vsplit<CR>
-map sk      :set splitbelow<CR>:split<CR>
-map sj      :set nosplitbelow<CR>:split<CR>
+map sj      :set splitbelow<CR>:split<CR>
+map sk      :set nosplitbelow<CR>:split<CR>
 
 "MarkDown Preview 配置
 "let g:mkdp_path_to_chrome="vimb"
@@ -239,7 +241,7 @@ let g:NERDTrimTrailingWhitespace = 1
 " 启用nerdcommenttoggle检查是否对所有选定行进行了注释
 let g:NERDToggleCheckAllLines = 1
 
-nmap <C-/> <plug>NERDCommenterToggle
+nmap <c-/> <plug>NERDCommenterToggle
 """""""""""""
 " Leaderf 配置
 """""""""""""
