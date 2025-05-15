@@ -1,3 +1,17 @@
 {
-    "coc.preferences.extensionUpdateCheck": "weekly"
+  "coc.preferences.extensionUpdateCheck": "weekly",
+  "phpformatter.enable": false,
+  "phpactor.enable": false,
+  "phpls.format.enable": true,
+  "phpls.format.auto": true,
+  "phpls.format.command": "php-cs-fixer",
+  "phpls.format.args": [
+    "fix",
+    "--config=/home/yang/.vim/php-cs-fixer.php",
+    "--using-cache=no",
+    "--allow-risky=yes",
+    "--verbose"
+  ],
+  "intelephense.environment.documentRoot": "${workspaceFolder}",
+  "intelephense.files.associations": ["*.php"]
 }

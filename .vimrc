@@ -9,6 +9,7 @@
                                     
 set nocompatible                "去除VI一至性
 syntax on                   	" 自动语法高亮
+set redrawtime=20000            "增加渲染时间,解决大文件不高亮
 
 set number                  	" 显示行号
 set cursorline   	        " 突出显示当前行
@@ -21,6 +22,12 @@ set wildmenu
 let mapleader="\<space>"    "设置Leader为空格
 "set clipboard=unnamedplus
 "set hidden
+
+"防止识别为superhtml
+autocmd BufRead,BufNewFile *.html set filetype=html
+
+command! Sw SudaWrite
+cnoreabbrev sw SudaWrite
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 "
@@ -36,7 +43,6 @@ let mapleader="\<space>"    "设置Leader为空格
 "gruvbox配色主题
 autocmd vimenter * ++nested colorscheme gruvbox
 let g:gruvbox_italic=1
-
 
 
 if (empty($TMUX))
@@ -73,7 +79,8 @@ set ttimeoutlen=150
 "退出插入模式
 autocmd InsertLeave * call Fcitx2en()
 "进入插入模式
-autocmd InsertEnter * call Fcitx2zh()
+"autocmd InsertEnter * call Fcitx2zh()
+autocmd InsertEnter * call Fcitx2en()
 
 
 """""""""""""""""""""""""
@@ -100,6 +107,8 @@ nmap	tl	:tabn<CR>
 "Shift跨行移动
 nmap	J	5j
 nmap	K	5k
+vmap	J	5j
+vmap	K	5k
 
 "插入模式下删除行
 imap    <c-d>   <ESC>ddi
@@ -124,15 +133,22 @@ map wk      <c-w>k
 map <a-l>   <c-w>l
 map wl      <c-w>l
 
+nnoremap <Leader>cmd :below split<CR>:resize 8<CR>:terminal<CR>:set nonumber<CR>
+autocmd TermOpen * tnoremap <Leader>cmd <C-\><C-n>:q<CR>
+
+
 map sl      :set splitright<CR>:vsplit<CR>
 map sh      :set nosplitright<CR>:vsplit<CR>
 map sj      :set splitbelow<CR>:split<CR>
 map sk      :set nosplitbelow<CR>:split<CR>
 
+iab ddd <c-r>=strftime("%Y-%m-%d")<cr>
+iab dddd <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr>
+iab aude @author<tab>Mr.Cookie<cr>@date<tab>
 "MarkDown Preview 配置
-"let g:mkdp_path_to_chrome="vimb"
+let g:mkdp_path_to_chrome="qutebrowser"
 "let g:mkdp_path_to_chrome="google-chrome-stable --new-window --app="
-let g:mkdp_path_to_chrome="vimb"
+"let g:mkdp_path_to_chrome="vimb"
 let g:mkdp_auto_close=0
 let g:mkdt_auto_astar=1
 nmap <F7> <Plug>MarkdownPreview
@@ -167,10 +183,12 @@ Plug 'morhetz/gruvbox'
 
 "coc.vim
 Plug 'neoclide/coc.nvim',{'branch':'release'}
+Plug 'MunifTanjim/prettier.nvim'
+Plug 'neovim/nvim-lspconfig'
+
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 "Plug 'scrooloose/nerdtree'
-
 
 
 "MakeDown
@@ -197,7 +215,7 @@ Plug 'gcmt/wildfire.vim'
 Plug 'tpope/vim-surround'
  
 "自动补全符号
-Plug 'Raimondi/delimitMate'
+"Plug 'Raimondi/delimitMate'
 
 "可视化缩进
 Plug 'Yggdroot/indentLine'
@@ -230,7 +248,8 @@ let g:NERDCompactSexyComs = 1
 let g:NERDAltDelims_java = 1
 
 " 添加您自己的自定义格式或覆盖默认格式（你懂的）
-let g:NERDCustomDelimiters = { 'php': { 'left': '/*','right': '*/' },'html': { 'left': '<!--','right': '-->' },'py': { 'left': '#' },'sh': { 'left': '#' } }
+"let g:NERDCustomDelimiters = { 'php': { 'left': '/*','right': '*/' },'html': { 'left': '<!--','right': '-->' },'py': { 'left': '#' },'sh': { 'left': '#' } }
+let g:NERDCustomDelimiters = { 'html': { 'left': '<!--','right': '-->' },'py': { 'left': '#' },'sh': { 'left': '#' } }
 
 " 允许注释和反转空行（在注释区域时很有用） （没亲测）
 let g:NERDCommentEmptyLines = 1
@@ -242,6 +261,8 @@ let g:NERDTrimTrailingWhitespace = 1
 let g:NERDToggleCheckAllLines = 1
 
 nmap <c-/> <plug>NERDCommenterToggle
+vmap <c-/> <plug>NERDCommenterToggle
+imap <c-/> <esc><plug>NERDCommenterToggle
 """""""""""""
 " Leaderf 配置
 """""""""""""
@@ -249,9 +270,9 @@ nmap <c-/> <plug>NERDCommenterToggle
 " 显示图标
 let g:Lf_ShowDevIcons = 1
 " 设置图标字体
-let g:Lf_DevIconsFont = "DroidSansMono Nerd Font Mono"
+"let g:Lf_DevIconsFont = "DroidSansMono Nerd Font Mono"
 " UTF8显示半个文字处理,好像用不到
-set ambiwidth=double
+"set ambiwidth=double
 
 let g:Lf_HideHelp = 1
 let g:Lf_UseCache = 0
@@ -293,7 +314,10 @@ let g:coc_global_extensions = [
             \'coc-snippets',
             \'coc-go',
             \'coc-clangd',
-            \ 'coc-explorer',
+            \'coc-explorer',
+            \'coc-sql',
+            \'coc-pairs',
+            \'coc-floaterm', 
             \]
 "COC用全局设置
 "set nobackup
@@ -330,11 +354,12 @@ nmap <silent> <leader>k <Plug>(coc-diagnostic-next)
 
 "查看定义
 nmap <silent> gd <Plug>(coc-definition)
-"
+nmap <silent> ngd :tab<Plug>(coc-definition)
+" 查看类型定义(接口定义)
 nmap <silent> gy <Plug>(coc-type-definition)
-"
+" 查看实现
 nmap <silent> gi <Plug>(coc-implementation)
-"
+" 查看引用 
 nmap <silent> gr <Plug>(coc-references)
 
 "显示文档
@@ -381,3 +406,34 @@ let g:rnvimr_layout = { 'relative': 'editor',
             \ 'style': 'minimal' }
 let g:rnvimr_presets = [{'width': 1.0, 'height': 1.0}]
 
+
+
+" 使用 Lua 配置 prettier.nvim
+" lua << EOF
+" require('prettier').setup({
+  " cli_options = {
+    " arrow_parens = "always",
+    " bracket_spacing = true,
+    " bracket_same_line = false,
+    " embedded_language_formatting = "auto",
+    " end_of_line = "lf",
+    " html_whitespace_sensitivity = "css",
+    " jsx_single_quote = false,
+    " print_width = 80,
+    " prose_wrap = "preserve",
+    " quote_props = "as-needed",
+    " semi = true,
+    " single_attribute_per_line = false,
+    " single_quote = false,
+    " tab_width = 2,
+    " trailing_comma = "es5",
+    " use_tabs = false,
+    " vue_indent_script_and_style = false,
+  " },
+  " config_precedence = "prefer-file", -- 或 "cli-override" 或 "file-override"
+  " filetypes = {
+    " "typescript", "typescriptreact", "javascript", "javascriptreact", "json", "markdown", "css", "scss", "html", "php"
+  " },
+" })
+" EOF
+"
