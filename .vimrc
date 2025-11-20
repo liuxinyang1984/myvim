@@ -1,4 +1,3 @@
-
 "  _   _         __     ___           
 " | \ | | ___  __\ \   / (_)_ __ ___  
 " |  \| |/ _ \/ _ \ \ / /| | '_ ` _ \ 
@@ -6,6 +5,10 @@
 " |_| \_|\___|\___/ \_/  |_|_| |_| |_|
 "
 """""""""""""""""""""""""""""""""""""""
+if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
+  silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
                                     
 set nocompatible                "去除VI一至性
 syntax on                   	" 自动语法高亮
@@ -151,6 +154,7 @@ let g:mkdp_path_to_chrome="qutebrowser"
 "let g:mkdp_path_to_chrome="vimb"
 let g:mkdp_auto_close=0
 let g:mkdt_auto_astar=1
+let g:mkdp_bufs = {}
 nmap <F7> <Plug>MarkdownPreview
 nmap <F8> <Plug>StopMarkdownPreview
 
@@ -228,7 +232,13 @@ Plug 'kevinhwang91/rnvimr'
 "快速注释
 Plug 'scrooloose/nerdcommenter' 
 
+"VUE
+Plug 'posva/vim-vue' 
+
+
+
 call plug#end()
+
 
 
 """""""""""""""""""""""""
@@ -405,35 +415,3 @@ let g:rnvimr_layout = { 'relative': 'editor',
             \ 'row': 0,
             \ 'style': 'minimal' }
 let g:rnvimr_presets = [{'width': 1.0, 'height': 1.0}]
-
-
-
-" 使用 Lua 配置 prettier.nvim
-" lua << EOF
-" require('prettier').setup({
-  " cli_options = {
-    " arrow_parens = "always",
-    " bracket_spacing = true,
-    " bracket_same_line = false,
-    " embedded_language_formatting = "auto",
-    " end_of_line = "lf",
-    " html_whitespace_sensitivity = "css",
-    " jsx_single_quote = false,
-    " print_width = 80,
-    " prose_wrap = "preserve",
-    " quote_props = "as-needed",
-    " semi = true,
-    " single_attribute_per_line = false,
-    " single_quote = false,
-    " tab_width = 2,
-    " trailing_comma = "es5",
-    " use_tabs = false,
-    " vue_indent_script_and_style = false,
-  " },
-  " config_precedence = "prefer-file", -- 或 "cli-override" 或 "file-override"
-  " filetypes = {
-    " "typescript", "typescriptreact", "javascript", "javascriptreact", "json", "markdown", "css", "scss", "html", "php"
-  " },
-" })
-" EOF
-"
